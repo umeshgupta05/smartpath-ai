@@ -23,10 +23,16 @@ const Fallback = () => (
   <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg animate-pulse" />
 );
 
+const ErrorFallback = ({ error }: { error: Error }) => (
+  <div className="w-full h-full flex items-center justify-center text-red-500">
+    <p>Error loading 3D component</p>
+  </div>
+);
+
 export const LoginSphere = ({ isDarkMode }: { isDarkMode: boolean }) => {
   return (
     <div className="h-full w-full">
-      <ErrorBoundary fallback={<Fallback />}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<Fallback />}>
           <Canvas
             camera={{ position: [0, 0, 5] }}
