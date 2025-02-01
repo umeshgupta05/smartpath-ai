@@ -4,20 +4,46 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Brain, BookOpen, Award, Target } from "lucide-react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sphere } from "@react-three/drei";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 const Scene = () => {
+  useEffect(() => {
+    return () => {
+      // Cleanup Three.js resources on unmount
+      const canvas = document.querySelector('canvas');
+      if (canvas) {
+        const gl = canvas.getContext('webgl');
+        if (gl) {
+          gl.getExtension('WEBGL_lose_context')?.loseContext();
+        }
+      }
+    };
+  }, []);
+
   return (
-    <>
+    <group>
       <OrbitControls enableZoom={false} />
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 5]} intensity={1} />
       <Sphere args={[1, 32, 32]}>
         <meshStandardMaterial color="#4C1D95" wireframe />
       </Sphere>
-    </>
+    </group>
   );
 };
+
+const LoadingFallback = () => (
+  <div className="w-full h-full min-h-[300px] flex items-center justify-center bg-primary/10 rounded-lg">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  </div>
+);
+
+const ErrorFallback = () => (
+  <div className="w-full h-full min-h-[300px] flex items-center justify-center bg-destructive/10 rounded-lg">
+    <p className="text-destructive">Something went wrong with the 3D visualization</p>
+  </div>
+);
 
 const FeatureCard = ({ icon: Icon, title, description }: { icon: any, title: string, description: string }) => {
   return (
@@ -64,13 +90,15 @@ const LearningPath = () => {
           </motion.p>
         </div>
 
-        <div className="h-[300px] relative rounded-lg overflow-hidden">
-          <Suspense fallback={<div className="w-full h-full bg-primary/10 animate-pulse rounded-lg" />}>
-            <Canvas camera={{ position: [0, 0, 5] }}>
-              <Scene />
-            </Canvas>
-          </Suspense>
-        </div>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <div className="h-[300px] relative rounded-lg overflow-hidden">
+            <Suspense fallback={<LoadingFallback />}>
+              <Canvas camera={{ position: [0, 0, 5] }}>
+                <Scene />
+              </Canvas>
+            </Suspense>
+          </div>
+        </ErrorBoundary>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <FeatureCard 
