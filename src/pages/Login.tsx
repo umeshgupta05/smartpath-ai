@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { Brain, Lightbulb, Moon, Sun, Target, BarChart3, Award } from "lucide-react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sphere } from "@react-three/drei";
-import * as THREE from "three";
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -59,20 +58,28 @@ const Login = () => {
     document.documentElement.classList.toggle("dark");
   };
 
-  // 3D Animation Component
+  // 3D Animation Component with Error Boundary and Suspense
   const AnimatedSphere = () => {
     return (
-      <Canvas camera={{ position: [0, 0, 5] }}>
-        <OrbitControls enableZoom={false} />
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-        <Sphere args={[1, 32, 32]}>
-          <meshStandardMaterial
-            color={isDarkMode ? "#4C1D95" : "#6D28D9"}
-            wireframe
-          />
-        </Sphere>
-      </Canvas>
+      <Suspense fallback={<div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10" />}>
+        <Canvas
+          camera={{ position: [0, 0, 5] }}
+          style={{ background: 'transparent' }}
+          gl={{ alpha: true, antialias: true }}
+        >
+          <OrbitControls enableZoom={false} enablePan={false} />
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[10, 10, 5]} intensity={1} />
+          <Sphere args={[1, 32, 32]}>
+            <meshStandardMaterial
+              color={isDarkMode ? "#4C1D95" : "#6D28D9"}
+              wireframe
+              transparent
+              opacity={0.8}
+            />
+          </Sphere>
+        </Canvas>
+      </Suspense>
     );
   };
 
