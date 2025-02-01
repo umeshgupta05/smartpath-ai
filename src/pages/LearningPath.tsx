@@ -3,8 +3,29 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Brain, ArrowRight, BookOpen, Trophy, Target } from "lucide-react";
 import { motion } from "framer-motion";
+import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sphere } from "@react-three/drei";
+
+const Scene = () => {
+  const { theme } = useTheme();
+  
+  return (
+    <>
+      <OrbitControls enableZoom={false} enablePan={false} />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 5]} intensity={1} />
+      <Sphere args={[1, 32, 32]}>
+        <meshStandardMaterial
+          color={theme === 'dark' ? '#6D28D9' : '#4C1D95'}
+          wireframe
+          transparent
+          opacity={0.8}
+        />
+      </Sphere>
+    </>
+  );
+};
 
 const PathNode = ({ title, description, status, delay = 0 }) => {
   return (
@@ -43,24 +64,9 @@ const PathNode = ({ title, description, status, delay = 0 }) => {
   );
 };
 
-const Scene = () => {
-  const { theme } = useTheme();
-  return (
-    <>
-      <OrbitControls enableZoom={false} enablePan={false} />
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
-      <Sphere args={[1, 32, 32]}>
-        <meshStandardMaterial
-          color={theme === 'dark' ? '#6D28D9' : '#4C1D95'}
-          wireframe
-          transparent
-          opacity={0.8}
-        />
-      </Sphere>
-    </>
-  );
-};
+const Fallback = () => (
+  <div className="w-full h-[300px] animate-pulse bg-primary/5 rounded-lg" />
+);
 
 const LearningPath = () => {
   const pathData = [
@@ -117,9 +123,11 @@ const LearningPath = () => {
           {/* 3D Visualization */}
           <div className="lg:col-span-1">
             <Card className="h-[300px] overflow-hidden backdrop-blur-lg bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10">
-              <Canvas camera={{ position: [0, 0, 5] }}>
-                <Scene />
-              </Canvas>
+              <Suspense fallback={<Fallback />}>
+                <Canvas camera={{ position: [0, 0, 5] }}>
+                  <Scene />
+                </Canvas>
+              </Suspense>
             </Card>
           </div>
 
