@@ -4,9 +4,47 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { Brain, Lightbulb, Moon, Sun, Target, BarChart3, Award } from "lucide-react";
+import { Brain, Moon, Sun, Target, BarChart3, Award } from "lucide-react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sphere } from "@react-three/drei";
+
+// Separate 3D component to prevent recreation
+const Scene = ({ isDarkMode }: { isDarkMode: boolean }) => {
+  return (
+    <>
+      <OrbitControls enableZoom={false} enablePan={false} />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 5]} intensity={1} />
+      <Sphere args={[1, 32, 32]}>
+        <meshStandardMaterial
+          color={isDarkMode ? "#4C1D95" : "#6D28D9"}
+          wireframe
+          transparent
+          opacity={0.8}
+        />
+      </Sphere>
+    </>
+  );
+};
+
+// Separate AnimatedSphere component
+const AnimatedSphere = ({ isDarkMode }: { isDarkMode: boolean }) => {
+  return (
+    <div className="h-full w-full">
+      <Suspense fallback={
+        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg" />
+      }>
+        <Canvas
+          camera={{ position: [0, 0, 5] }}
+          style={{ background: 'transparent' }}
+          gl={{ alpha: true, antialias: true }}
+        >
+          <Scene isDarkMode={isDarkMode} />
+        </Canvas>
+      </Suspense>
+    </div>
+  );
+};
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -56,31 +94,6 @@ const Login = () => {
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle("dark");
-  };
-
-  // 3D Animation Component with Error Boundary and Suspense
-  const AnimatedSphere = () => {
-    return (
-      <Suspense fallback={<div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10" />}>
-        <Canvas
-          camera={{ position: [0, 0, 5] }}
-          style={{ background: 'transparent' }}
-          gl={{ alpha: true, antialias: true }}
-        >
-          <OrbitControls enableZoom={false} enablePan={false} />
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <Sphere args={[1, 32, 32]}>
-            <meshStandardMaterial
-              color={isDarkMode ? "#4C1D95" : "#6D28D9"}
-              wireframe
-              transparent
-              opacity={0.8}
-            />
-          </Sphere>
-        </Canvas>
-      </Suspense>
-    );
   };
 
   return (
@@ -167,7 +180,7 @@ const Login = () => {
       <div className="w-full md:w-1/2 bg-gradient-to-br from-primary/5 to-accent/5 p-8">
         {/* 3D Animation */}
         <div className="h-48 mb-8">
-          <AnimatedSphere />
+          <AnimatedSphere isDarkMode={isDarkMode} />
         </div>
 
         {/* Features Grid */}
