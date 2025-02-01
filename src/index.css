@@ -90,51 +90,6 @@
   }
 }
 
-@layer components {
-  .glass-morphism {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
-  }
-  
-  .neo-blur {
-    @apply backdrop-blur-2xl bg-black/40 border border-white/10;
-  }
-
-  .flip-card {
-    @apply relative h-48 w-full perspective-1000;
-  }
-
-  .flip-card-inner {
-    @apply relative w-full h-full transition-transform duration-500 transform-style-3d hover:rotate-y-180;
-  }
-
-  .flip-card-front,
-  .flip-card-back {
-    @apply absolute w-full h-full backface-hidden;
-  }
-
-  .flip-card-back {
-    @apply rotate-y-180;
-  }
-}
-
-@layer utilities {
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .transform-style-3d {
-    transform-style: preserve-3d;
-  }
-
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-
-  .rotate-y-180 {
-    transform: rotateY(180deg);
-  }
-}
-
 @layer base {
   * {
     @apply border-border;
