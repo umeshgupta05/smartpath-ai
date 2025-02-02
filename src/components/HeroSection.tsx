@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Brain, Play } from "lucide-react";
+import { Brain } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-dark via-primary to-accent">
       {/* Animated background pattern */}
@@ -26,14 +29,14 @@ const HeroSection = () => {
             Experience personalized learning powered by artificial intelligence. Master new skills at your own pace with adaptive courses and real-time feedback.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up" style={{ animationDelay: "0.4s" }}>
-            <Button size="lg" className="bg-white text-primary hover:bg-white/90 transition-all gap-2">
+          <div className="flex justify-center animate-fade-up" style={{ animationDelay: "0.4s" }}>
+            <Button 
+              size="lg" 
+              className="bg-white text-primary hover:bg-white/90 transition-all gap-2"
+              onClick={() => navigate('/login')}
+            >
               Get Started
               <Brain className="w-4 h-4" />
-            </Button>
-            <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 gap-2">
-              Try AI Demo
-              <Play className="w-4 h-4" />
             </Button>
           </div>
         </div>
