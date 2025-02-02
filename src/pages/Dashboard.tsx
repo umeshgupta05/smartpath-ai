@@ -1,12 +1,21 @@
 import { Card } from "@/components/ui/card";
-import { Brain, Book, Trophy, ChartBar } from "lucide-react";
+import { Brain, Book, Trophy, ChartBar, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 animate-fade-up">Dashboard</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 animate-fade-up">Dashboard</h1>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="rounded-full hover:bg-primary/10 hover:text-primary"
+          >
+            <MessageCircle className="h-5 w-5" />
+          </Button>
+        </div>
         
         {/* Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
